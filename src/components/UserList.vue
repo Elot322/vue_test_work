@@ -7,16 +7,17 @@
 </template>
 
 <script lang="ts">
-import  { UserEntity }  from '@/domain/entity';
+import  { UserEntity }  from '@/domain/types';
 import { computed, defineComponent, PropType } from 'vue';
 
 export default defineComponent({
   name: "UserList",
+  
   props: {
     userList: {
-      //Я НЕ ЗНАЮ КАК ТУТ ПРАВИЛЬНО СДЕЛАТЬ
+      //Я НЕ ЗНАЮ КАК ТУТ ПРАВИЛЬНО СДЕЛАТЬ, TS ругается.
       type: [] as PropType<Array<UserEntity>>,
-      default: [{id: 0, name: "default", phone: "22222"}]
+      default: [{id: 0, name: "ERROR", phone: "ERROR"}]
     },
     limit: {
       type: Number,
@@ -27,14 +28,13 @@ export default defineComponent({
       default: false,
     }
   },
+
   setup(props) {
     const limitedUserList = computed<Array<UserEntity>>({
       get(): Array<UserEntity> {
         if(props.showAll === false) {
-          console.log("Limited")
           return props.userList.slice(0, props.limit)
         } else {
-          console.log("No limited")
           return props.userList
         }
       },
@@ -52,10 +52,10 @@ export default defineComponent({
 
 <style>
   li {
-    list-style-type: none; /* Убираем маркеры */
+    list-style-type: none; 
    }
    ul {
-    margin-left: 0; /* Отступ слева в браузере IE и Opera */
-    padding-left: 0; /* Отступ слева в браузере Firefox, Safari, Chrome */
+    margin-left: 0; 
+    padding-left: 0; 
    }
 </style>

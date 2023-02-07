@@ -1,6 +1,7 @@
 import PlaceholderDatasource from "./datasource";
-import {UserEntity} from "./entity";
+import {UserEntity} from "./types";
 
+//Репозиторий - работа с View
 interface IUserRepository {
     getUsers(): Promise<UserEntity[]>;
 }

@@ -19,47 +19,59 @@
 
 <script lang="ts">
 import UserList from '@/components/UserList.vue';
-import { UserEntity } from '@/domain/entity';
+import { UserEntity } from '@/domain/types';
 import Vue from 'vue';
 import UserRepository from "../../src/domain/repository"
 
 interface IData {
     showAll: boolean,
-    buttonText: String,
     userList: Array<UserEntity>,
     limit: number
 }
 
 interface IMethods {
     onButtonClick(): void;
+    openFullList(): void;
 }
 
 interface IComputed {
+    buttonText: string;
 }
 
 export default Vue.extend<IData, IMethods, IComputed>({
     components: { UserList },
+
     data() {
         return {
             showAll: false,
-            buttonText: "Далее",
             userList: [],
             limit: 5
         };
     },
-    methods: {
-        onButtonClick() {
-            this.showAll = !this.showAll;
-            if(this.showAll) {
-                this.buttonText="Скрыть"
-            } else {
-                this.buttonText="Далее"
-            }
+
+    computed: {
+        //Текст кнопки
+        buttonText(): string {
+           return this.showAll ? "Скрыть" : "Далее" 
         }
     },
+
+    methods: {
+        //Обработчик нажатия на кнопку
+        onButtonClick(): void {
+            this.openFullList();
+        },
+        //Метод раскрывающий полный лист
+        openFullList(): void {
+            this.showAll = !this.showAll;
+        },
+    },
+
+    //Перед монтированием получаем данные с плейсхолдера
     async beforeMount(){
         this.userList = await UserRepository.getUsers();
     }
+
 }) 
 </script>
 

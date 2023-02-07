@@ -1,5 +1,6 @@
-import { UserModel } from "./model";
+import { UserModel } from "./types";
 
+// DataSource - работа с Repository
 interface IDatasourceUsers {
 //
 //Получение списка пользователей
