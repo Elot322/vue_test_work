@@ -1,50 +1,56 @@
 <template>
-  <div>
-    <ul>
-      <li v-for="user in limitedUserList">ID: {{ user.id }}, Имя: {{ user.name }}, Телефон: {{ user.phone }}</li>
-    </ul>
+  <div class ="user-list">
+    <div class="user-list-body">
+      <ul>
+        <li v-for="user in limitedUserList">ID: {{ user.id }}, Имя: {{ user.name }}, Телефон: {{ user.phone }}</li>
+      </ul>
+    </div>
+    <div class="user-list-actions">
+      <div class="actions" v-show="showButton">
+            <button @click="onButtonClick">{{buttonText}}</button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import  { UserEntity }  from '@/domain/types';
-import { computed, defineComponent, PropType } from 'vue';
+import { computed, defineComponent, PropType, ref } from 'vue';
 
 export default defineComponent({
   name: "UserList",
-  
-  props: {
+   props: {
     userList: {
-      //Я НЕ ЗНАЮ КАК ТУТ ПРАВИЛЬНО СДЕЛАТЬ, TS ругается.
-      type: [] as PropType<Array<UserEntity>>,
-      default: [{id: 0, name: "ERROR", phone: "ERROR"}]
+      type: Array as PropType<UserEntity[]>,
+      default:() => [{id: 0, name: "ERROR", phone: "ERROR"}]
     },
     limit: {
       type: Number,
       default: 0
     },
-    showAll: {
-      type: Boolean,
-      default: false,
-    }
   },
-
   setup(props) {
-    const limitedUserList = computed<Array<UserEntity>>({
-      get(): Array<UserEntity> {
-        if(props.showAll === false) {
-          return props.userList.slice(0, props.limit)
-        } else {
-          return props.userList
-        }
-      },
-      set(newValue: Array<UserEntity>): void {
-      }
-    });
+    //Переменные и функция не передающиеся на template
+    const isShowedAll = ref<boolean>(false);
+    function openFullList(): void {
+      isShowedAll.value = !isShowedAll.value
+    } 
 
+    //Сomputed
+    const limitedUserList = computed<UserEntity[]>(()=> isShowedAll.value ? props.userList : props.userList.slice(0, props.limit));
+    const buttonText = computed<string>(()=> isShowedAll.value ? "Скрыть" : "Далее");
+    const showButton = computed<boolean>(()=> props.userList.length > props.limit ? true : false)
     
+    //Methods
+    function onButtonClick(): void {
+      openFullList();
+    }
+
     return {
       limitedUserList,
+      buttonText,
+      showButton,
+      onButtonClick,
     }
   }
 })

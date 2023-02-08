@@ -15,7 +15,7 @@ export class PlaceholderDatasource implements IDatasourceUsers {
             if (!response.ok) {
               throw new Error(response.statusText)
             }
-            return response.json().then(data => {console.log(data as UserModel); return data as Array<UserModel>});
+            return response.json().then(data => data as Array<UserModel>);
           })       
     }
 }
